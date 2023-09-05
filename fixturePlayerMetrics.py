@@ -1,6 +1,6 @@
 import requests as r
 import pandas as pd
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 ### Get Premier League Id
 
@@ -30,6 +30,7 @@ def fetchLeagueIdByName(api_key, api_host):
 def fetchFixturesDate(api_key, api_host):
     dayFixtures = []
     url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
+    #currentDate = '2023-09-02'
     currentDate = datetime.now().strftime("%Y-%m-%d")
     querystring = {"date":currentDate, "league": leagueId, "season":2023}
     headers = {
@@ -54,18 +55,18 @@ def fetchFixtureById(api_key, api_host, fixtureId):
     	"X-RapidAPI-Host": api_host
     }
     
-    response = r.get(url, headers=headers, params=querystring).json()['response']
-    
+    fixtureInfo = r.get(url, headers=headers, params=querystring).json()['response']
+    return fixtureInfo
+
+def formatPlayerMetrics(fixtureInfo):
     playerInfo = []
-    
-    for x in response:
+    for x in fixtureInfo:
         playerData = []
         for y in x['players']:
             y['teamName'] =  x['team']['name']
             y['teamId'] = x['team']['id']
             playerData.append(y)
         playerInfo.extend(playerData)
-        
     playerStats = []
     for x in playerInfo:
         if x['statistics'][0]['games']['substitute'] == False:
@@ -90,14 +91,12 @@ def fetchFixtureById(api_key, api_host, fixtureId):
         }
         playerStats.append(playerRaw)
     return playerStats
-        
-        
 
 ### Global Info
 
 base_url = "https://api-football-v1.p.rapidapi.com/v3"
-api_key = "ENTER YOUR API KEY"
-api_host = "ENTER YOUR HOST"
+api_key = "ENTER KEY HERE"
+api_host = "ENTER HOST HERE"
 
 leagueId  = fetchLeagueIdByName(api_key, api_host)
 
@@ -106,9 +105,10 @@ fixtureIds = fetchFixturesDate(api_key, api_host)
 finalPlayerInfo = []
 for x in fixtureIds:
     gameInfo = fetchFixtureById(api_key, api_host, x)
-    finalPlayerInfo.extend(gameInfo)
+    playerStats = formatPlayerMetrics(gameInfo)
+    finalPlayerInfo.extend(playerStats)
 
 ### Export to a .xlsx file
 df_allPlayers = pd.DataFrame(finalPlayerInfo)
-df_allPlayers.to_excel('playerMatchMetrics1.xlsx', index=False)
+df_allPlayers.to_excel('test_playerMatchMetrics_09_05_23.xlsx', index=False)
 print ("All finished")
