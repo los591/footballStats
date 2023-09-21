@@ -1,1 +1,1 @@
-This is a repo for football stats across all leagues in Europe and South America
+This is an attempt to create a system to fetch match level, player performance statistics across any league and season available in API-Football. My goal is to create analyzable repositories of football stats across all leagues in Europe and South America
