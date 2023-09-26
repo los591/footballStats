@@ -200,8 +200,8 @@ def join_with_match_results(player_info, season_results):
 ### Global Info
 
 base_url = "https://api-football-v1.p.rapidapi.com/v3"
-api_key = "d84cd3a986msh99290296f083073p12e132jsnfac9c2bd37bb"
-api_host = "api-football-v1.p.rapidapi.com"
+api_key = "ENTER HERE"
+api_host = "ENTER HERE"
 
 leagueId  = fetchLeagueIdByName(api_key, api_host)
 
