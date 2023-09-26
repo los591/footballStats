@@ -5,8 +5,8 @@ from datetime import datetime, date, timedelta
 ### Get Premier League Id
 
 def fetchLeagueIdByName(api_key, api_host):
-    leagueCountry = input("Type the country of the League you want to follow")
-    leagueName = input("Type the name of the League you want to follow")
+    leagueCountry = input('England')
+    leagueName = input('Premier League')
     #Make the call
     url = "https://api-football-v1.p.rapidapi.com/v3/leagues"
     headers = {
@@ -14,6 +14,7 @@ def fetchLeagueIdByName(api_key, api_host):
         "X-RapidAPI-Host": api_host
     }
     params = {"country":leagueCountry}
+    print(r.get(url, headers=headers, params = params).json())
     response = r.get(url, headers=headers, params = params).json()['response']
     print ("all leagues fetched")
     for x in response:
